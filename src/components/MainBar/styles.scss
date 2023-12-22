@@ -1,0 +1,14 @@
+.app-bar {
+  align-items: center;
+  background-color: #969696;
+  color: #fff;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-items: flex-start;
+  padding: 10px 10px 10px 6em;
+
+  .title {
+    font-size: 28px;
+    padding: 10px 10px 10px 1rem;
+  }
+}
