@@ -52,4 +52,16 @@
   justify-items: center;
   margin: 2rem auto;
   width: 66%;
+  position: relative;
+  min-height: 3rem;
+}
+
+.loading {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  bottom: 0;
 }

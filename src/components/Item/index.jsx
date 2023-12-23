@@ -3,7 +3,7 @@ import "./styles.scss";
 
 const Item = ({ img, fullName, profession, gender }) => {
   return (
-    <div>
+    <div className="item">
       <img src={img} width={300} height={220} />
       <div className="fullName">{fullName}</div>
       <div className="info">{gender}</div>

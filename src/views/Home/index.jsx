@@ -19,6 +19,7 @@ const genders = {
 function Home({ data, getItems }) {
   const ref = useRef(true);
   const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     if (ref.current || page > 1) {
@@ -33,31 +34,55 @@ function Home({ data, getItems }) {
     }, 1500);
   };
 
+  const getFilteredItems = () => {
+    const val = filter?.toLowerCase();
+
+    if (val) {
+      return data.results.filter(
+        (item) =>
+          item.first_name.toLowerCase().includes(filter.toLowerCase()) ||
+          item.last_name.toLowerCase().includes(filter.toLowerCase()) ||
+          item.profession.toLowerCase().includes(filter.toLowerCase())
+      );
+    } else {
+      return data.results;
+    }
+  };
+
+  const filteredItems = getFilteredItems();
+
+  const onChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   return (
     <div>
       <div className="search-input">
-        <input placeholder="Search" />
+        <input placeholder="Search" onChange={onChange} />
         <div className="separator" />
         <img src={searchIcon} width={18} />
       </div>
       <div className="title">Find your Oompa Loompa</div>
       <div className="subtitle">There are more than 100k</div>
       <InfiniteScroll
-        dataLength={data?.results?.length || 0}
+        dataLength={filteredItems?.length || 0}
         next={fetchMoreData}
-        hasMore={true}
-        loader={<h4>Loading...</h4>}
-        endMessage={<h4>There is no more Oompa Loompas to list</h4>}
+        hasMore={!!filteredItems?.length}
+        loader={<div className="loading">Loading...</div>}
       >
-        {data?.results?.map((item, index) => (
-          <Item
-            key={item.id + index}
-            img={item.image}
-            fullName={`${item.first_name} ${item.last_name}`}
-            gender={genders[item.gender]}
-            profession={item.profession}
-          />
-        ))}
+        {filteredItems?.length > 0 ? (
+          filteredItems.map((item, index) => (
+            <Item
+              key={item.id + index}
+              img={item.image}
+              fullName={`${item.first_name} ${item.last_name}`}
+              gender={genders[item.gender]}
+              profession={item.profession}
+            />
+          ))
+        ) : (
+          <h4>There is no match</h4>
+        )}
       </InfiniteScroll>
     </div>
   );
