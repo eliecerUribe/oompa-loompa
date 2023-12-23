@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import "./styles.scss";
 
-const Item = ({ img, fullName, profession, gender }) => {
+const Item = ({ img, fullName, profession, gender, onClick }) => {
   return (
-    <div className="item">
+    <div className="item" onClick={onClick}>
       <img src={img} width={300} height={220} />
       <div className="fullName">{fullName}</div>
       <div className="info">{gender}</div>
@@ -17,5 +17,6 @@ Item.propTypes = {
   fullName: PropTypes.string,
   profession: PropTypes.string,
   gender: PropTypes.string,
+  onClick: PropTypes.func,
 };
 export default Item;

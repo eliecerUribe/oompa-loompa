@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Item from "../../components/Item";
 import {
@@ -20,6 +21,7 @@ function Home({ data, getItems }) {
   const ref = useRef(true);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (ref.current || page > 1) {
@@ -78,6 +80,7 @@ function Home({ data, getItems }) {
               fullName={`${item.first_name} ${item.last_name}`}
               gender={genders[item.gender]}
               profession={item.profession}
+              onClick={() => navigate(`/${item.id}`)}
             />
           ))
         ) : (

@@ -7,8 +7,15 @@
   justify-items: flex-start;
   padding: 10px 10px 10px 6em;
 
-  .title {
-    font-size: 20px;
-    padding: 10px 10px 10px 1rem;
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    .title {
+      font-size: 20px;
+      padding: 10px 10px 10px 1rem;
+    }
   }
 }
