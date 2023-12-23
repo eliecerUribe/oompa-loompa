@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Item from "../../components/Item";
@@ -17,10 +17,14 @@ const genders = {
 };
 
 function Home({ data, getItems }) {
+  const ref = useRef(true);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    getItems(page);
+    if (ref.current || page > 1) {
+      getItems(page);
+      ref.current = false;
+    }
   }, [getItems, page]);
 
   const fetchMoreData = () => {
