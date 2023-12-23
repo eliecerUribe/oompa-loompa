@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Item from "../../components/Item";
 import {
   fetchAll,
@@ -15,18 +16,18 @@ const genders = {
   M: "Man",
 };
 
-function Home({ data, loading, errors, getItems }) {
+function Home({ data, getItems }) {
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
-    getItems();
-  }, [getItems]);
+    getItems(page);
+  }, [getItems, page]);
 
-  if (loading) {
-    return "It is loading...";
-  }
-
-  if (errors) {
-    return "It was an error :(";
-  }
+  const fetchMoreData = () => {
+    setTimeout(() => {
+      setPage((prev) => prev + 1);
+    }, 1500);
+  };
 
   return (
     <div>
@@ -37,19 +38,23 @@ function Home({ data, loading, errors, getItems }) {
       </div>
       <div className="title">Find your Oompa Loompa</div>
       <div className="subtitle">There are more than 100k</div>
-      <div className="items-container">
-        {data.results?.length > 0
-          ? data.results.map((item) => (
-              <Item
-                key={item.id}
-                img={item.image}
-                fullName={`${item.first_name} ${item.last_name}`}
-                gender={genders[item.gender]}
-                profession={item.profession}
-              />
-            ))
-          : "No Oompa Loompas found"}
-      </div>
+      <InfiniteScroll
+        dataLength={data?.results?.length || 0}
+        next={fetchMoreData}
+        hasMore={true}
+        loader={<h4>Loading...</h4>}
+        endMessage={<h4>There is no more Oompa Loompas to list</h4>}
+      >
+        {data?.results?.map((item, index) => (
+          <Item
+            key={item.id + index}
+            img={item.image}
+            fullName={`${item.first_name} ${item.last_name}`}
+            gender={genders[item.gender]}
+            profession={item.profession}
+          />
+        ))}
+      </InfiniteScroll>
     </div>
   );
 }
@@ -65,29 +70,23 @@ Home.propTypes = {
   getItems: PropTypes.func.isRequired,
 };
 
-Home.defaultProps = {
-  data: {
-    results: [],
-    current: 0,
-    total: 0,
-  },
-};
-
 const mapStateToProps = (state) => {
   const { data, loading, errors } = state.items;
   return { data, loading, errors };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  getItems: () => {
+  getItems: (page) => {
     dispatch(fetchAll());
 
     fetch(
-      "https://2q2woep105.execute-api.eu-west-1.amazonaws.com/napptilus/oompa-loompas"
+      `https://2q2woep105.execute-api.eu-west-1.amazonaws.com/napptilus/oompa-loompas?page=${page}`
     )
       .then((response) => response.json())
       .then((data) => dispatch(fetchAllSuccess(data)))
-      .catch((error) => dispatch(fetchAllFailure(error)));
+      .catch((error) =>
+        dispatch(fetchAllFailure(error.message || "An error has occured"))
+      );
   },
 });
 

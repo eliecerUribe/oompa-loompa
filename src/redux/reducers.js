@@ -1,5 +1,13 @@
 const initialState = {
-  items: { data: {}, loading: false, errors: null },
+  items: {
+    data: {
+      current: 0,
+      total: 0,
+      results: [],
+    },
+    loading: false,
+    errors: null,
+  },
   activeItem: null,
 };
 
@@ -20,7 +28,10 @@ const rootReducer = (state = initialState, action) => {
         items: {
           ...state.items,
           loading: false,
-          data: action.payload,
+          data: {
+            ...action.payload,
+            results: [...state.items.data.results, ...action.payload.results],
+          },
         },
       };
     case "FETCH_ALL_FAILURE":
