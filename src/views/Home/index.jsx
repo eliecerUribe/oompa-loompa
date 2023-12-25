@@ -8,27 +8,24 @@ import {
   fetchAll,
   fetchAllFailure,
   fetchAllSuccess,
+  setActive,
 } from "../../redux/actions";
+import { genders } from "../../utils";
 import searchIcon from "../../images/ic_search.png";
 import "./styles.scss";
 
-const genders = {
-  F: "Woman",
-  M: "Man",
-};
-
-function Home({ data, getItems }) {
+function Home({ data, getItems, activeItem, dispatch }) {
   const ref = useRef(true);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (ref.current || page > 1) {
+    if ((ref.current || page > 1) && !activeItem) {
       getItems(page);
       ref.current = false;
     }
-  }, [getItems, page]);
+  }, [getItems, page, activeItem]);
 
   const fetchMoreData = () => {
     setTimeout(() => {
@@ -80,7 +77,10 @@ function Home({ data, getItems }) {
               fullName={`${item.first_name} ${item.last_name}`}
               gender={genders[item.gender]}
               profession={item.profession}
-              onClick={() => navigate(`/${item.id}`)}
+              onClick={() => {
+                dispatch(setActive(item));
+                navigate(`/${item.id}`);
+              }}
             />
           ))
         ) : (
@@ -100,11 +100,13 @@ Home.propTypes = {
   loading: PropTypes.bool.isRequired,
   errors: PropTypes.string,
   getItems: PropTypes.func.isRequired,
+  activeItem: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const { data, loading, errors } = state.items;
-  return { data, loading, errors };
+  return { data, loading, errors, activeItem: state.activeItem };
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -120,6 +122,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(fetchAllFailure(error.message || "An error has occured"))
       );
   },
+  dispatch,
 });
 
 const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(Home);

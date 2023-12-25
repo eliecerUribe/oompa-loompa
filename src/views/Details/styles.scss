@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 3.5em 0;
+
+  img {
+    padding: 0 1em 1em 0;
+  }
+
+  .fullName {
+    font-weight: bold;
+    padding-bottom: 2px;
+  }
+
+  .info {
+    color: #7b7d7b;
+    font-size: 14px;
+    padding-bottom: 2px;
+  }
+
+  .profession {
+    color: #7b7d7b;
+    font-size: 14px;
+    font-style: italic;
+    padding-bottom: 12px;
+  }
+
+  .item-description {
+    width: 420px;
+  }
+}

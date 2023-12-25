@@ -7,7 +7,7 @@ const Item = ({ img, fullName, profession, gender, onClick }) => {
       <img src={img} width={300} height={220} />
       <div className="fullName">{fullName}</div>
       <div className="info">{gender}</div>
-      <div className="info">{profession}</div>
+      <div className="profession">{profession}</div>
     </div>
   );
 };
