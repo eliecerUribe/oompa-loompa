@@ -1,10 +1,23 @@
+import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { genders } from "../../utils";
 import "./styles.scss";
 
-function Details({ fullName, description, image, gender, profession }) {
-  const formattedString = description.replace(/\n/g, "<br>");
+function Details({ activeItem }) {
+  const navigate = useNavigate();
+  const { first_name, last_name, gender, image, favorite, profession } =
+    activeItem || {};
+  const fullName = `${first_name} ${last_name}`;
+  const description = favorite?.song;
+  const formattedString = description?.replace(/\n/g, "<br>");
+
+  useEffect(() => {
+    if (!activeItem) {
+      navigate("/");
+    }
+  }, [activeItem, navigate]);
 
   return (
     <div className="container">
@@ -23,21 +36,18 @@ function Details({ fullName, description, image, gender, profession }) {
 }
 
 Details.propTypes = {
-  fullName: PropTypes.string,
-  description: PropTypes.string,
-  image: PropTypes.string,
-  gender: PropTypes.string,
-  profession: PropTypes.string,
+  activeItem: PropTypes.shape({
+    fullName: PropTypes.string,
+    description: PropTypes.string,
+    image: PropTypes.string,
+    gender: PropTypes.string,
+    profession: PropTypes.string,
+  }),
 };
 
-const stateToProps = (state) => {
-  const { first_name, last_name, gender, image, favorite, profession } =
-    state.activeItem;
-  const fullName = `${first_name} ${last_name}`;
-  const description = favorite.song;
-
-  return { fullName, description, image, gender, profession };
-};
+const stateToProps = (state) => ({
+  activeItem: state.activeItem,
+});
 
 const ConnectedComponent = connect(stateToProps)(Details);
 
