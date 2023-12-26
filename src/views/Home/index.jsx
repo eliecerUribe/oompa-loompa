@@ -14,18 +14,18 @@ import { genders } from "../../utils";
 import searchIcon from "../../images/ic_search.png";
 import "./styles.scss";
 
-function Home({ data, getItems, activeItem, dispatch }) {
+function Home({ data, getItems, dispatch }) {
   const ref = useRef(true);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(data.current || 1);
   const [filter, setFilter] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ((ref.current || page > 1) && !activeItem) {
+    if ((ref.current || page > 1) && data.current !== page) {
       getItems(page);
       ref.current = false;
     }
-  }, [getItems, page, activeItem]);
+  }, [getItems, page, data]);
 
   const fetchMoreData = () => {
     setTimeout(() => {
@@ -106,7 +106,7 @@ Home.propTypes = {
 
 const mapStateToProps = (state) => {
   const { data, loading, errors } = state.items;
-  return { data, loading, errors, activeItem: state.activeItem };
+  return { data, loading, errors };
 };
 
 const mapDispatchToProps = (dispatch) => ({

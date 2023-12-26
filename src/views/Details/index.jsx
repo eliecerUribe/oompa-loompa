@@ -14,6 +14,8 @@ function Details({ activeItem }) {
   const formattedString = description?.replace(/\n/g, "<br>");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     if (!activeItem) {
       navigate("/");
     }
