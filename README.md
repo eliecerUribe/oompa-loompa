@@ -31,3 +31,13 @@ npm run dev
 ```
 
 This will spin up the necessary containers and launch the application. Open your web browser and visit http://localhost:3000 to access the application.
+
+Sreenshots:
+
+![Mobile homepage](image.png)
+
+![Mobile detail view](image-1.png)
+
+![Desktop homepage](image-2.png)
+
+![Desktop detail view](image-3.png)
